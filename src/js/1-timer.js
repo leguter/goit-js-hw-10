@@ -1,5 +1,7 @@
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
+import iziToast from "izitoast";
+import "izitoast/dist/css/iziToast.min.css";
 const refs = {
     btnStart: document.querySelector('.btn-start'),
     inputEl: document.querySelector('#datetime-picker'),
@@ -11,6 +13,7 @@ const refs = {
 let userSelectedDate;
 let intervalId;
 refs.btnStart.disabled = true;
+refs.btnStart.classList.remove('btn-right-data');
 const options = {
   enableTime: true,
   time_24hr: true,
@@ -19,7 +22,13 @@ const options = {
   onClose(selectedDates) {
       userSelectedDate = selectedDates[0];
       if (userSelectedDate < new Date()) {
-          window.alert('Please choose a date in the future');
+        iziToast.show({
+          title: 'Error',
+          message: 'Illegal operaion',
+          titleColor: 'white',
+          backgroundColor: 'red',
+            color: 'white',
+        });
           refs.btnStart.disabled = true;
           refs.btnStart.classList.remove('btn-right-data');
       } else {
@@ -27,21 +36,32 @@ const options = {
           refs.btnStart.classList.add('btn-right-data')
           
       }
-      console.log(userSelectedDate);
+    console.log(userSelectedDate);
   },
 };
-const differenceTime = userSelectedDate - Date.now();
+let ms;
 refs.btnStart.addEventListener('click', () => {
-    // while (refs.secondsEl !== '00') {
-    //     refs.btnStart.disabled = true;
-    //     refs.btnStart.classList.remove('btn-right-data');
-    // }
-    intervalId = setInterval(() => {
-      
-  }, 1000)
-})
+  // refs.btnStart.disabled = true;
+  // refs.btnStart.classList.remove('btn-right-data');
+  // refs.btnStart.disabled = true;
+  // refs.inputEl.classList.remove('input-timer');
+  // refs.inputEl.disabled = true;
+  if (intervalId) clearInterval(intervalId);
+    refs.btnStart.setAttribute('disabled', '');
+    refs.btnStart.classList.remove('right-date');
+    refs.inputEl.setAttribute('disabled', '');
+  intervalId = setInterval(() => convertMs(ms), 1000);
+});
 flatpickr("#datetime-picker", options);
 function convertMs(ms) {
+  ms = userSelectedDate.getTime() - Date.now();
+   if (ms < 0) {
+        clearInterval(intervalId);
+     refs.btnStart.disabled = false;
+     refs.inputEl.disabled = false;
+     refs.inputEl.classList.add('input-timer');
+        return;
+    };
   // Number of milliseconds per unit of time
   const second = 1000;
   const minute = second * 60;
@@ -57,10 +77,14 @@ function convertMs(ms) {
   // Remaining seconds
   const seconds = Math.floor((((ms % day) % hour) % minute) / second);
 
-  return { days, hours, minutes, seconds };
+  // { days, hours, minutes, seconds };
+  refs.daysEl.textContent = days.toString().padStart(2, '0');
+  refs.hoursEl.textContent = hours.toString().padStart(2,'0');
+  refs.minutesEl.textContent = minutes.toString().padStart(2, '0');
+  refs.secondsEl.textContent = seconds.toString().padStart(2, '0');
+  
 }
 
-console.log(convertMs(2000)); // {days: 0, hours: 0, minutes: 0, seconds: 2}
-console.log(convertMs(140000)); // {days: 0, hours: 0, minutes: 2, seconds: 20}
-console.log(convertMs(24140000)); // {days: 0, hours: 6 minutes: 42, seconds: 20}
-console.log(convertMs(userSelectedDate));
+// console.log(convertMs(2000)); // {days: 0, hours: 0, minutes: 0, seconds: 2}
+// console.log(convertMs(140000)); // {days: 0, hours: 0, minutes: 2, seconds: 20}
+// console.log(convertMs(24140000)); // {days: 0, hours: 6 minutes: 42, seconds: 20}
