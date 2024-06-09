@@ -2,6 +2,7 @@ import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 import iziToast from "izitoast";
 import "izitoast/dist/css/iziToast.min.css";
+import closeIcon from '../img/close-icon.svg'
 const refs = {
     btnStart: document.querySelector('.btn-start'),
     inputEl: document.querySelector('#datetime-picker'),
@@ -25,9 +26,19 @@ const options = {
         iziToast.show({
           title: 'Error',
           message: 'Illegal operaion',
-          titleColor: 'white',
-          backgroundColor: 'red',
-            color: 'white',
+          titleColor: '#fff',
+          backgroundColor: '#ef4040',
+          messageColor: '#fff',
+          close: true,
+          color: 'white',
+          theme: 'dark',
+          iconUrl: closeIcon,
+          messageSize: '16px',
+          titleSize: '16px',
+          messageLineHeight: '1.5',
+          titleLineHeight: '1.5',
+          position: "topRight",
+          transitionOut: 'fadeOut',
         });
           refs.btnStart.disabled = true;
           refs.btnStart.classList.remove('btn-right-data');
