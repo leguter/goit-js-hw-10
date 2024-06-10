@@ -107,4 +107,19 @@
     line-height: 1.5;
     color: #2e2f42;
 }
-
+/* -------------------------------------------------------------- */
+.label-ms {
+  display:flex;
+  flex-direction: column;
+  max-width: 360px;
+  max-height: 264px;
+  gap: 8px;
+}
+.input-daley {
+  border: 1px solid #808080;
+    border-radius: 4px;
+}
+.input-daley:hover {
+  border: 1px solid #000;
+    border-radius: 4px;
+}
